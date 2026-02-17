@@ -1,5 +1,7 @@
-"""Design and develop a Python-based Student Performance Analyzer application that uses Object-Oriented Programming concepts to manage student records, performs statistical
-analysis using NumPy, visualizes performance using Matplotlib, and provides a user-friendlyinterface using Tkinter."""
+"""Design and develop a Python-based Student Performance Analyzer application that uses 
+Object-Oriented Programming concepts to manage student records, performs statistical
+analysis using NumPy, visualizes performance using Matplotlib, 
+and provides a user-friendlyinterface using Tkinter."""
 
 #Python Code
 import tkinter as tk
@@ -98,3 +100,4 @@ if __name__ == "__main__":
     root = tk.Tk()
     App(root)
     root.mainloop()
+
