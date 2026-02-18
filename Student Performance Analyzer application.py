@@ -10,12 +10,23 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
+# COLORS
+BG_COLOR = "#F4F6F9"
+CARD_COLOR = "#FFFFFF"
+PRIMARY = "#2563EB"
+SUCCESS = "#16A34A"
+ACCENT = "#1E293B"
+FONT_TITLE = ("Segoe UI Semibold", 18)
+FONT_MAIN = ("Segoe UI", 11)
+FONT_TABLE = ("Segoe UI", 10)
+
+#Student class
 class Student:
     def __init__(self, roll, name, marks):
         self.roll, self.name, self.marks = roll, name, marks
     def average(self): 
         return np.mean(list(self.marks.values()))
-
+#Analyzer class
 class Analyzer:
     def __init__(self): 
         self.students = []
@@ -25,20 +36,66 @@ class Analyzer:
                 self.students[i] = student
                 return
         self.students.append(student)
+    #Advanced Statistics Dashboard
     def stats(self):
         if not self.students:
             messagebox.showerror("Error", "No student records!")
             return
-        avgs = [s.average() for s in self.students]
-        msg = (f"Class Average: {np.mean(avgs):.2f}\n"
-               f"Highest Average: {np.max(avgs):.2f}\n"
-               f"Lowest Average: {np.min(avgs):.2f}")
-        messagebox.showinfo("📊 Statistics", msg)
+        popup = Toplevel(parent)
+        popup.title("Class Performance Dashboard")
+        popup.geometry("520x500")
+        popup.configure(bg="#111827")
+        avgs = np.array([s.average() for s in self.students])
+        names = [s.name for s in self.students]
+
+        class_avg = np.mean(avgs)
+        median = np.median(avgs)
+        std_dev = np.std(avgs)
+        highest = np.max(avgs)
+        lowest = np.min(avgs)
+
+        top_student = names[np.argmax(avgs)]
+        low_student = names[np.argmin(avgs)]
+
+        grades = {
+            "A (>=85)": np.sum(avgs >= 85),
+            "B (70-84)": np.sum((avgs >= 70) & (avgs < 85)),
+            "C (50-69)": np.sum((avgs >= 50) & (avgs < 70)),
+            "Fail (<50)": np.sum(avgs < 50),
+        }
+        tk.Label(popup, text="📊 Class Performance Overview",
+                 font=("Segoe UI Semibold", 17),
+                 bg="#111827", fg="white").pack(pady=20)
+
+        info = f"""
+Total Students: {len(self.students)}
+
+Class Average: {class_avg:.2f}
+Median Score: {median:.2f}
+Standard Deviation: {std_dev:.2f}
+
+Top Performer: {top_student} ({highest:.2f})
+Lowest Performer: {low_student} ({lowest:.2f})
+"""
+        tk.Label(popup, text=info,
+                 font=("Segoe UI", 12),
+                 bg="#111827", fg="#D1D5DB",
+                 justify="left").pack(pady=10)
+
+        tk.Label(popup, text="Grade Distribution",
+                 font=("Segoe UI Semibold", 14),
+                 bg="#111827", fg="#60A5FA").pack(pady=10)
+
+        for grade, count in grades.items():
+            tk.Label(popup, text=f"{grade}: {count}",
+                     font=("Segoe UI", 11),
+                     bg="#111827", fg="white").pack()
+    #visualization 
     def visualize(self, parent):
         if not self.students:
             messagebox.showerror("Error", "No student records!")
             return
-        popup = Toplevel(parent); 
+        popup = Toplevel(parent)
         popup.title("Performance Chart")
         names, avgs = [s.name for s in self.students], [s.average() for s in self.students]
         fig_width = max(5, len(names) * 0.6)
@@ -100,4 +157,5 @@ if __name__ == "__main__":
     root = tk.Tk()
     App(root)
     root.mainloop()
+
 
