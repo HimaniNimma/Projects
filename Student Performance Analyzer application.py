@@ -3,14 +3,12 @@ Object-Oriented Programming concepts to manage student records, performs statist
 analysis using NumPy, visualizes performance using Matplotlib, 
 and provides a user-friendlyinterface using Tkinter."""
 
-#Python Code
 import tkinter as tk
 from tkinter import ttk, messagebox, Toplevel
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-# COLORS
 BG_COLOR = "#F4F6F9"
 CARD_COLOR = "#FFFFFF"
 PRIMARY = "#2563EB"
@@ -20,13 +18,12 @@ FONT_TITLE = ("Segoe UI Semibold", 18)
 FONT_MAIN = ("Segoe UI", 11)
 FONT_TABLE = ("Segoe UI", 10)
 
-#Student class
 class Student:
     def __init__(self, roll, name, marks):
         self.roll, self.name, self.marks = roll, name, marks
     def average(self): 
         return np.mean(list(self.marks.values()))
-#Analyzer class
+        
 class Analyzer:
     def __init__(self): 
         self.students = []
@@ -36,7 +33,7 @@ class Analyzer:
                 self.students[i] = student
                 return
         self.students.append(student)
-    #Advanced Statistics Dashboard
+        
     def stats(self):
         if not self.students:
             messagebox.showerror("Error", "No student records!")
@@ -90,26 +87,57 @@ Lowest Performer: {low_student} ({lowest:.2f})
             tk.Label(popup, text=f"{grade}: {count}",
                      font=("Segoe UI", 11),
                      bg="#111827", fg="white").pack()
-    #visualization 
+                  
     def visualize(self, parent):
         if not self.students:
             messagebox.showerror("Error", "No student records!")
             return
+
         popup = Toplevel(parent)
-        popup.title("Performance Chart")
-        names, avgs = [s.name for s in self.students], [s.average() for s in self.students]
-        fig_width = max(5, len(names) * 0.6)
-        fig, ax = plt.subplots(figsize=(fig_width, 4), dpi=100)
-        bars = ax.bar(names, avgs, color="#4DA6FF", width=0.5, edgecolor="black")
-        ax.set_title("Average Marks per Student", fontsize=12)
-        ax.set_ylabel("Marks"); ax.set_ylim(0, 100)
+        popup.title("Performance Analytics")
+        popup.configure(bg="#0F172A")
+
+        names = [s.name for s in self.students]
+        avgs = np.array([s.average() for s in self.students])
+        top_index = np.argmax(avgs)
+
+        plt.style.use("dark_background")
+        fig, ax = plt.subplots(figsize=(8, 5), dpi=100)
+
+        colors = []
+        for i in range(len(avgs)):
+            if i == top_index:
+                colors.append("#22C55E")  # highlight topper
+            else:
+                colors.append("#3B82F6")
+
+        bars = ax.bar(names, avgs,
+                      color=colors,
+                      edgecolor="white",
+                      linewidth=1.2)
+
+        ax.set_title("Student Performance Analysis",
+                     fontsize=16, weight="bold", pad=15)
+
+        ax.set_ylabel("Average Marks", fontsize=12)
+        ax.set_ylim(0, 100)
+
+        ax.grid(True, linestyle="--", alpha=0.3)
         plt.xticks(rotation=30, ha="right")
+
         for bar, val in zip(bars, avgs):
-            ax.text(bar.get_x() + bar.get_width()/2, val + 1, f"{val:.1f}",
-                    ha="center", fontsize=9, color="black")
+            ax.text(bar.get_x() + bar.get_width()/2,
+                    val + 2,
+                    f"{val:.1f}",
+                    ha="center",
+                    fontsize=10,
+                    weight="bold")
+
+        fig.patch.set_facecolor("#0F172A")
         plt.tight_layout()
+
         canvas = FigureCanvasTkAgg(fig, master=popup)
-        canvas.draw(); 
+        canvas.draw()
         canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
 
 class App:
@@ -157,5 +185,6 @@ if __name__ == "__main__":
     root = tk.Tk()
     App(root)
     root.mainloop()
+
 
 
