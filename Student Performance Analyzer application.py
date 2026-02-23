@@ -3,14 +3,12 @@ Object-Oriented Programming concepts to manage student records, performs statist
 analysis using NumPy, visualizes performance using Matplotlib, 
 and provides a user-friendlyinterface using Tkinter."""
 
-#Python Code
 import tkinter as tk
 from tkinter import ttk, messagebox, Toplevel
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-# COLORS
 BG_COLOR = "#F4F6F9"
 CARD_COLOR = "#FFFFFF"
 PRIMARY = "#2563EB"
@@ -20,13 +18,12 @@ FONT_TITLE = ("Segoe UI Semibold", 18)
 FONT_MAIN = ("Segoe UI", 11)
 FONT_TABLE = ("Segoe UI", 10)
 
-#Student class
 class Student:
     def __init__(self, roll, name, marks):
         self.roll, self.name, self.marks = roll, name, marks
     def average(self): 
         return np.mean(list(self.marks.values()))
-#Analyzer class
+
 class Analyzer:
     def __init__(self): 
         self.students = []
@@ -36,7 +33,7 @@ class Analyzer:
                 self.students[i] = student
                 return
         self.students.append(student)
-    #Advanced Statistics Dashboard
+    
     def stats(self):
         if not self.students:
             messagebox.showerror("Error", "No student records!")
@@ -90,7 +87,7 @@ Lowest Performer: {low_student} ({lowest:.2f})
             tk.Label(popup, text=f"{grade}: {count}",
                      font=("Segoe UI", 11),
                      bg="#111827", fg="white").pack()
-    #visualization 
+  
     def visualize(self, parent):
         if not self.students:
             messagebox.showerror("Error", "No student records!")
@@ -157,5 +154,6 @@ if __name__ == "__main__":
     root = tk.Tk()
     App(root)
     root.mainloop()
+
 
 
