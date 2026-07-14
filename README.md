@@ -1,3 +1,2 @@
 # Projects
-1.Student performance analyzer
-2.Traffic light detection (IoT part)
+Traffic red light violation detection using ESP32 and license plate tracking
